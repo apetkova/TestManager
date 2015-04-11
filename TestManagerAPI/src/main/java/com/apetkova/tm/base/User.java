@@ -1,4 +1,4 @@
-package base;
+package com.apetkova.tm.base;
 
 public class User {
 	

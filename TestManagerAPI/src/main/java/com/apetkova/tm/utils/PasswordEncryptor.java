@@ -1,4 +1,4 @@
-package utils;
+package com.apetkova.tm.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

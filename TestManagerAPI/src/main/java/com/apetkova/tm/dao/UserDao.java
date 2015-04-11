@@ -1,13 +1,13 @@
-package dao;
+package com.apetkova.tm.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import utils.PasswordEncryptor;
-import database.Database;
-import database.IPreparedStatementsSQL;
-import base.User;
+import com.apetkova.tm.base.User;
+import com.apetkova.tm.database.Database;
+import com.apetkova.tm.database.IPreparedStatementsSQL;
+import com.apetkova.tm.utils.PasswordEncryptor;
 
 public class UserDao implements IPreparedStatementsSQL{
 

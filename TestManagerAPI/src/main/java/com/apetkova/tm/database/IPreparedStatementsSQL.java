@@ -1,4 +1,4 @@
-package database;
+package com.apetkova.tm.database;
 
 public interface IPreparedStatementsSQL {
 	

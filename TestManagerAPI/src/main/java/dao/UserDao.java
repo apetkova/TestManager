@@ -14,6 +14,7 @@ public class UserDao implements IPreparedStatementsSQL{
 	Database db;
 	public UserDao(){
 		db = new Database();
+		
 	}
 	
 	public boolean insertUser(User user){

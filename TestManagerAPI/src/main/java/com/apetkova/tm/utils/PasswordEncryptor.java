@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import org.apache.commons.codec.binary.Base64;
+//import org.apache.commons.codec.binary.Base64;
 
 public class PasswordEncryptor {
 
@@ -55,7 +55,7 @@ public class PasswordEncryptor {
 			for (int i = B_MSSG_SIZE; i < B_FULL_SIZE; i++)
 				passAndSalt[i] = salt[i - B_MSSG_SIZE];
 
-			return Base64.encodeBase64String(passAndSalt);
+			return null; // java.util.Base64.encodeBase64String(passAndSalt);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return null;
@@ -66,7 +66,7 @@ public class PasswordEncryptor {
 	}
 
 	public byte[] extractSalt(String encryptedPassword){
-		byte [] passAndSalt = Base64.decodeBase64(encryptedPassword);
+		byte [] passAndSalt = null; //java.util.Base64.decodeBase64(encryptedPassword);
 		byte [] salt = new byte[B_SALT_SIZE];
 		int j = B_SALT_SIZE - 1;
 

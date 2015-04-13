@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
+import com.apetkova.tm.base.User;
+import com.apetkova.tm.dao.UserDao;
+
 
 
 public class Database implements IPreparedStatementsSQL {
@@ -18,6 +21,9 @@ public class Database implements IPreparedStatementsSQL {
 	Connection connection = null;
 
 	public Connection getConnection() {
+		if (connection == null){
+			connect();
+		}
 		return connection;
 	}
 
@@ -49,10 +55,8 @@ public class Database implements IPreparedStatementsSQL {
 	}
 
 	public static void main(String[] args) {
-//		Database db = new Database();
-//		db.connect();
-//		User user = db.loadUser("admin");
+//		UserDao ud = new UserDao();
+//		User user = ud.loadUser("admin");
 //		System.out.println(user.getUsername());
-//		db.closeConnection();
 	}
 }

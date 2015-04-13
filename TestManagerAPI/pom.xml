@@ -25,11 +25,11 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.4-1201-jdbc41</version>
 		</dependency>
-		<!-- >dependency>
+		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
 			<version>3.0.4.Final</version>
-		</dependency-->
+		</dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
@@ -39,13 +39,13 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>1.18.1</version>
+            <version>1.19</version>
         </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-servlet</artifactId>
-            <version>1.18.1</version>
-        </dependency>
+      <dependency>
+	<groupId>com.sun.jersey</groupId>
+	<artifactId>jersey-servlet</artifactId>
+	<version>1.19</version>
+</dependency>
 		
 	</dependencies>
 

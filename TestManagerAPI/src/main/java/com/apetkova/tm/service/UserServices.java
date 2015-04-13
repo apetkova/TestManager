@@ -27,14 +27,14 @@ public class UserServices {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public boolean login(User user) throws JsonParseException, JsonMappingException, IOException{
+	public String login(User user) throws JsonParseException, JsonMappingException, IOException{
 		userDao = new UserDao();
-		if (userDao.emailExists(user.getUsername())) {
+		if (userDao.usernameExists(user.getUsername())) {
 			if (userDao.passwordMatch(user.getUsername(), user.getPassword())){
-				return true;
+				return "true";
 			}
 		}
-		return false;
+		return "false";
 	}
 	
 	@POST

@@ -105,7 +105,6 @@ public class UserDao implements IPreparedStatementsSQL{
 	
 	public boolean passwordMatch(String username, String enteredPass){
 
-		PasswordEncryptor encryptor = new PasswordEncryptor();
 		String password = null;
 		try {
 			PreparedStatement ps = db.getConnection().prepareStatement(SQL_GET_PASS_BY_USRNAME);
@@ -119,6 +118,6 @@ public class UserDao implements IPreparedStatementsSQL{
 			e.printStackTrace();
 			return false;
 		}
-		return password.equals(encryptor.encryptPasswordOnLogin(enteredPass, password));
+		return PasswordEncryptor.isPasswordCorrect(enteredPass, password);
 	}
 }

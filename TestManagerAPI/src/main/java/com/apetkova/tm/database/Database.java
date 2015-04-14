@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import com.apetkova.tm.base.User;
 import com.apetkova.tm.dao.UserDao;
+import com.apetkova.tm.utils.PasswordEncryptor;
 
 
 
@@ -57,6 +58,5 @@ public class Database implements IPreparedStatementsSQL {
 	public static void main(String[] args) {
 //		UserDao ud = new UserDao();
 //		User user = ud.loadUser("admin");
-//		System.out.println(user.getUsername());
 	}
 }

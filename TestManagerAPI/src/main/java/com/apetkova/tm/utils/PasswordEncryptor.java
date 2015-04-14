@@ -4,7 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-//import org.apache.commons.codec.binary.Base64;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class PasswordEncryptor {
 
@@ -19,7 +20,7 @@ public class PasswordEncryptor {
 	public PasswordEncryptor(){
 	}
 
-	public byte[] generateSalt(){
+	public static byte[] generateSalt(){
 
 		SecureRandom random;
 		byte[] bSalt = new byte[B_SALT_SIZE];
@@ -33,7 +34,7 @@ public class PasswordEncryptor {
 		return bSalt;
 	}
 
-	public String encryptPassword(String password, byte[] salt){
+	public static String encryptPassword(String password, byte[] salt){
 		MessageDigest digest;
 		try {
 			digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
@@ -55,7 +56,7 @@ public class PasswordEncryptor {
 			for (int i = B_MSSG_SIZE; i < B_FULL_SIZE; i++)
 				passAndSalt[i] = salt[i - B_MSSG_SIZE];
 
-			return null; // java.util.Base64.encodeBase64String(passAndSalt);
+			return Base64.encodeBase64String(passAndSalt);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return null;
@@ -65,8 +66,8 @@ public class PasswordEncryptor {
 		}
 	}
 
-	public byte[] extractSalt(String encryptedPassword){
-		byte [] passAndSalt = null; //java.util.Base64.decodeBase64(encryptedPassword);
+	public static byte[] extractSalt(String encryptedPassword){
+		byte [] passAndSalt = Base64.decodeBase64(encryptedPassword);
 		byte [] salt = new byte[B_SALT_SIZE];
 		int j = B_SALT_SIZE - 1;
 
@@ -78,17 +79,17 @@ public class PasswordEncryptor {
 		return salt;
 	}
 
-	public String encryptPasswordOnReg(String password){
+	public static String encryptPasswordOnReg(String password){
 
 		byte[] salt = generateSalt();
 		return encryptPassword(password, salt);
 	}
 
 
-	public String encryptPasswordOnLogin(String enteredPassword, String password){
+	public static boolean isPasswordCorrect(String enteredPassword, String password){
 
 		byte [] salt = extractSalt(password);
-		return encryptPassword(enteredPassword, salt);		
+		return encryptPassword(enteredPassword, salt).equals(password);		
 	}
 
 }

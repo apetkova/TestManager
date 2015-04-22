@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<!--
+	Arcana by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Welcome to TM</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.dropotron.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+		<noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-wide.css" />
+		</noscript>
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+		<script>
+	  var username ;          
+    $(document).ready(function() {
+    username= $().SPServices.SPGetCurrentUser({
+    fieldName: "Name",
+    debug: false
+	
+	$.ajax
+({
+type: "GET",
+url: "GetMessages",
+dataType:"json",
+success: function(data)
+{
+if(data.Messages.length)
+{
+$.each(data.Messages, function(i,data)
+{
+var msg_data="<div id='msg"+data.msg_id+"'>"+data.message+"</div>";
+$(msg_data).appendTo("#content");
+});
+}
+else
+{
+$("#content").html("No Results");
+}
+}
+});
+$('#UpdateButton').click(function() 
+{
+// Previous Post
+});
+return false;
+
+});
+    ); 
+</script>
+	</head>
+	<body>
+
+		<!-- Header -->
+			<div id="header">
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul>
+							<li class="current"><a href="index.html">Login</a></li>
+							<li><a href="left-sidebar.html">Help</a></li>
+						</ul>
+					</nav>
+					
+			</div>
+
+		<!-- Main -->
+			<section class="wrapper style1">
+				<div class="container">
+					<div id="content">
+
+						<!-- Content -->
+					<div class="row 200%">
+						<section class="4u 12u(narrower)">
+							<div class="box highlight">
+								<i class="icon major fa-paper-plane"></i>
+								<h3>This Is Important</h3>
+								<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
+							</div>
+						</section>
+
+					</div>
+				</div>
+			</section>
+
+
+		<!-- Footer -->
+			<div id="footer">
+				<!-- Copyright -->
+					<div class="copyright">
+						<ul class="menu">
+							<li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+						</ul>
+					</div>
+
+			</div>
+
+	</body>
+</html>

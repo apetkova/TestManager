@@ -5,22 +5,10 @@
 	id="WebApp_ID" version="3.0">
 	<display-name>TestManagerAPI</display-name>
 	
-<!--     <servlet> -->
-<!--         <servlet-name>rest-ws</servlet-name> -->
-<!--         <servlet-class> -->
-<!--             com.sun.jersey.spi.container.servlet.ServletContainer -->
-<!--         </servlet-class> -->
-        
-<!--         <init-param> -->
-<!--             <param-name>com.sun.jersey.config.property.packages</param-name> -->
-<!--             <param-value>com.apetkova.tm.service</param-value> -->
-<!--         </init-param> -->
-<!--         <load-on-startup>1</load-on-startup> -->
-<!--     </servlet> -->
-<!--     <servlet-mapping> -->
-<!--         <servlet-name>rest-ws</servlet-name> -->
-<!--         <url-pattern>/rest/*</url-pattern> -->
-<!--     </servlet-mapping> -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
      <servlet-mapping>
         <servlet-name>resteasy-servlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>

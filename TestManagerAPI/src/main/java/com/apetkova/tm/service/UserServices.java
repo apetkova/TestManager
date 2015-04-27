@@ -5,13 +5,13 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import jdk.nashorn.internal.objects.annotations.Getter;
+import javax.ws.rs.core.Response.Status;
 
 import com.apetkova.tm.base.User;
 import com.apetkova.tm.dao.UserDao;
@@ -29,11 +29,13 @@ public class UserServices {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String login(User user) throws JsonParseException,
-			JsonMappingException, IOException {
+	public String login(User user, @Context HttpServletRequest request)
+			throws JsonParseException, JsonMappingException, IOException {
 		userDao = new UserDao();
 		if (userDao.usernameExists(user.getUsername())) {
 			if (userDao.passwordMatch(user.getUsername(), user.getPassword())) {
+				HttpSession session = request.getSession();
+				session.setAttribute("user", user);
 				return "true";
 			}
 		}
@@ -50,7 +52,7 @@ public class UserServices {
 		return userDao.insertUser(user);
 	}
 
-	@Getter
+	@GET
 	@Path("/me")
 	public Response getMe(@Context HttpServletRequest request) {
 		Response response = null;
@@ -67,8 +69,9 @@ public class UserServices {
 				response = Response.serverError().build();
 			}
 		} else {
-			session.setAttribute("user", "admin");
-			response = Response.ok().build();
+			// session.setAttribute("user", "admin");
+			// response = Response.ok().build();
+			response = Response.status(Status.UNAUTHORIZED).build();
 		}
 
 		return response;

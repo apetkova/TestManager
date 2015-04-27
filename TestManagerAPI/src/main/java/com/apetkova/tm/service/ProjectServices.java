@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
@@ -21,11 +20,10 @@ public class ProjectServices {
 
 	private ProjectDao projectDao;
 
-	@POST
-	@Path("/getprojects")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public String getProjects(String username) throws JsonParseException,
-			JsonMappingException, IOException {
+	@GET
+	@Path("/getprojects/{username}")
+	public String getProjects(@PathParam("username") String username)
+			throws JsonParseException, JsonMappingException, IOException {
 		projectDao = new ProjectDao();
 		return projectDao.getUserProjects(username).toString();
 	}

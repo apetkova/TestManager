@@ -81,6 +81,12 @@
 				hoverDelay: 0,
 				alignment: 'center'
 			});
+			
+			$('#me').dropotron({
+				offsetY: -15,
+				hoverDelay: 0,
+				alignment: 'center'
+			});
 
 	});
 

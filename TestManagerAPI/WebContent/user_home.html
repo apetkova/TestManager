@@ -7,9 +7,18 @@
 <html>
 <head>
 <title>Welcome to TM</title>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<meta name="description" content="" />
-<meta name="keywords" content="" />
+<meta
+	http-equiv="content-type"
+	content="text/html; charset=utf-8"
+/>
+<meta
+	name="description"
+	content=""
+/>
+<meta
+	name="keywords"
+	content=""
+/>
 <!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery.dropotron.min.js"></script>
@@ -17,34 +26,81 @@
 <script src="js/skel-layers.min.js"></script>
 <script src="js/init.js"></script>
 <noscript>
-	<link rel="stylesheet" href="css/skel.css" />
-	<link rel="stylesheet" href="css/style.css" />
-	<link rel="stylesheet" href="css/style-wide.css" />
+	<link
+		rel="stylesheet"
+		href="css/skel.css"
+	/>
+	<link
+		rel="stylesheet"
+		href="css/style.css"
+	/>
+	<link
+		rel="stylesheet"
+		href="css/style-wide.css"
+	/>
 </noscript>
 <!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 <script>
-	var username;
-	$(document).ready(function() {
-		username = $().SPServices.SPGetCurrentUser({
-			fieldName : "Name",
-			debug : false
-		});
+function getCurrentUser(){
+	$.ajax({
+		url : "/TestManagerAPI/rest/user/me",
+		dataType : "text",
+		success : function(result, textStatus, jqXHR) {
+			var username = JSON.parse(result).username;
+			document.getElementById("current_user").innerHTML += username;
+			insertProjects(username);
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('update Stock error: ' + textStatus + " " + errorThrown);
+		}
 	});
+};
+	function insertProjects(username) {
+		var projects = [];
+		$.ajax({
+			url : "/TestManagerAPI/rest/project/getprojects/" + username,
+			dataType : "text",
+			success : function(result, textStatus, jqXHR) {
+				var stripped = result.replace("[", "").replace("]", "");
+				projects = stripped.split(",");
+				for (i = 0; i < projects.length; i++) {
+					var html = "<section class=\"4u 12u(narrower)\"><div class=\"box highlight\"><i class=\"icon major fa-paper-plane\"></i>";
+					html += "<h3>" + projects[i] + "</h3>";
+					html += "</div></section>";
+					document.getElementById("project_container").innerHTML += html;
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert('update Stock error: ' + textStatus);
+			}
+		});
+	};
+	
 </script>
 </head>
-<body>
+
+<body onload="getCurrentUser()">
 
 	<!-- Header -->
 	<div id="header">
-
+			<ul align="right" id = "me">
+			<li><a id="current_user" href=""></a>
+					<ul>
+					<li><a href="#">Settings</a></li>
+					<li><a href="#">Logout</a></li>
+				</ul>
+			</li>
+			</ul>
 		<!-- Nav -->
 		<nav id="nav">
 			<ul>
-				<li class="current"><a href="index.html">Login</a></li>
-				<li><a href="left-sidebar.html">Help</a></li>
+				<li class="current"><a href="index.html">My Projects</a></li>
 			</ul>
 		</nav>
 
+	</div>
+	<div id="new">
+	<a href="">Add New Project</a>
 	</div>
 
 	<!-- Main -->
@@ -53,14 +109,10 @@
 			<div id="content">
 
 				<!-- Content -->
-				<div class="row 200%">
-					<section class="4u 12u(narrower)">
-						<div class="box highlight">
-							<i class="icon major fa-paper-plane"></i>
-							<h3>Request project access</h3>
-							<p>Access to projects must be granted by respective administrators; Click here for list of available projects and place your request.</p>
-						</div>
-					</section>
+				<div
+					class="row 200%"
+					id="project_container"
+				>
 
 				</div>
 			</div>

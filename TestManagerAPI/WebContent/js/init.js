@@ -85,7 +85,7 @@
 			$('#me').dropotron({
 				offsetY: -15,
 				hoverDelay: 0,
-				alignment: 'center'
+				alignment: 'right'
 			});
 
 	});

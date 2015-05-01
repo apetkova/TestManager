@@ -43,7 +43,6 @@
 		transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
 		color: #37c0fb;
 		text-decoration: none;
-		border-bottom: dotted 1px;
 	}
 
 		a:hover {
@@ -534,7 +533,7 @@
 	}
 
 	.box.post {
-		position: relative;
+		position: center;
 		margin: 0 0 2em 0;
 	}
 
@@ -584,20 +583,21 @@
 			margin: 0;
 		}
 
-			#header > ul > li {
-				position: relative;
-				display: inline-block;
-				margin-right: 3em;
-				font-weight: 600;
-				color: #37c0fb;
-				text-decoration: none;
-
+		#header > div.identity{
+			padding: 0px 15px 0px 0px;
+			margin-bottom: -35px;
+			margin-top: -20px;
+			text-align: right;
+			vertical-align: baseline;
+			font-weight: 600;
+			color: #37c0fb;
+			text-decoration: none;
+		}
+		
+		#header > div.identity > a {
+			color: #37c0fb;
 			}
-
-				#header > ul > li:hover a {
-					color: #37c0fb;
-				}
-
+		
 	#nav {
 		cursor: default;
 		background-color: #333;
@@ -733,7 +733,6 @@
 	
 	#new > a {
 	color: #ffffff;
-	display: block;
 	text-decoration: none;
 	border: 0;
 	font-weight: 600;

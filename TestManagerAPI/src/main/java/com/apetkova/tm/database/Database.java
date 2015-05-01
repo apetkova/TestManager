@@ -52,5 +52,7 @@ public class Database {
 	public static void main(String[] args) {
 		// UserDao ud = new UserDao();
 		// User user = ud.loadUser("admin");
+		// ProjectDao pd = new ProjectDao();
+		// System.out.println(pd.getNonUserProjects("admin"));
 	}
 }

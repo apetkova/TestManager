@@ -61,10 +61,11 @@
 
 	.row {
 		border-bottom: solid 1px transparent;
+		text-align: center;
 	}
 
 	.row > * {
-		float: left;
+		float: none;
 	}
 
 	.row:after, .row:before {

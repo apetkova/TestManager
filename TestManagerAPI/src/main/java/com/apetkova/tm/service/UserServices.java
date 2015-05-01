@@ -29,27 +29,31 @@ public class UserServices {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String login(User user, @Context HttpServletRequest request)
+	public Response login(User user, @Context HttpServletRequest request)
 			throws JsonParseException, JsonMappingException, IOException {
 		userDao = new UserDao();
 		if (userDao.usernameExists(user.getUsername())) {
 			if (userDao.passwordMatch(user.getUsername(), user.getPassword())) {
 				HttpSession session = request.getSession();
 				session.setAttribute("user", user);
-				return "true";
+				return Response.ok("true").build();
 			}
 		}
-		return "false";
+		return Response.ok("false").build();
 	}
 
 	@POST
 	@Path("/signup")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public boolean signup(String jason) throws JsonParseException,
+	public Response signup(String jason) throws JsonParseException,
 			JsonMappingException, IOException {
 		User user = UserJason.signupJasonToUser(jason);
 		userDao = new UserDao();
-		return userDao.insertUser(user);
+		if ( userDao.insertUser(user) ) {
+			return Response.ok().build();
+		} else {
+			return Response.status(400).build();
+		}
 	}
 
 	@GET
@@ -69,8 +73,6 @@ public class UserServices {
 				response = Response.serverError().build();
 			}
 		} else {
-			// session.setAttribute("user", "admin");
-			// response = Response.ok().build();
 			response = Response.status(Status.UNAUTHORIZED).build();
 		}
 

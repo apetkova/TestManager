@@ -26,10 +26,11 @@ public class ProjectServices {
 
 	@GET
 	@Path("/getprojects/{username}")
-	public String getProjects(@PathParam("username") String username)
+	public Response getProjects(@PathParam("username") String username)
 			throws JsonParseException, JsonMappingException, IOException {
 		projectDao = new ProjectDao();
-		return projectDao.getUserProjects(username).toString();
+		
+		return Response.ok(projectDao.getUserProjects(username).toString()).build();
 	}
 
 	@GET
@@ -50,7 +51,7 @@ public class ProjectServices {
 
 	@GET
 	@Path("/getnewprojects/{username}")
-	public String getNewProjects(@PathParam("username") String username)
+	public Response getNewProjects(@PathParam("username") String username)
 			throws JsonParseException, JsonMappingException, IOException {
 		projectDao = new ProjectDao();
 		List<String[]> projects = projectDao.getNonUserProjects(username);
@@ -62,7 +63,7 @@ public class ProjectServices {
 			json.put("timestamp", project[2]);
 			array.add(json);
 		}
-		return array.toJSONString();
+		return Response.ok(array.toJSONString()).build();
 	}
 
 }

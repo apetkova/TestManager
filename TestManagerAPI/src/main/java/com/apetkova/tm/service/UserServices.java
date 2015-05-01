@@ -35,7 +35,7 @@ public class UserServices {
 		if (userDao.usernameExists(user.getUsername())) {
 			if (userDao.passwordMatch(user.getUsername(), user.getPassword())) {
 				HttpSession session = request.getSession();
-				session.setAttribute("user", user);
+				session.setAttribute("user", user.getUsername());
 				return "true";
 			}
 		}

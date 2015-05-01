@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
@@ -15,6 +16,7 @@ import org.json.simple.JSONObject;
 
 import com.apetkova.tm.dao.ProjectDao;
 import com.apetkova.tm.details.ProjectDetails;
+import com.apetkova.tm.details.UserAccessDetails;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -48,21 +50,34 @@ public class ProjectServices {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/getnewprojects/{username}")
-	public String getNewProjects(@PathParam("username") String username)
+	public Response getNewProjects(@PathParam("username") String username)
 			throws JsonParseException, JsonMappingException, IOException {
 		projectDao = new ProjectDao();
 		List<String[]> projects = projectDao.getNonUserProjects(username);
 		JSONArray array = new JSONArray();
 		for (String[] project : projects) {
 			JSONObject json = new JSONObject();
-			json.put("project", project[0]);
-			json.put("role", project[1]);
-			json.put("timestamp", project[2]);
+			json.put("id", project[0]);
+			json.put("project", project[1]);
+			json.put("role", project[2]);
+			json.put("timestamp", project[3]);
 			array.add(json);
 		}
-		return array.toJSONString();
+		return Response.ok(array.toJSONString(), MediaType.TEXT_PLAIN).build();
+	}
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/requestaccess")
+	public Response requestAccess(UserAccessDetails userAccess) {
+		projectDao = new ProjectDao();
+
+		return Response.ok(
+				Boolean.toString(projectDao.requestAccess(userAccess.username,
+						userAccess.id)), MediaType.TEXT_PLAIN).build();
 	}
 
 }

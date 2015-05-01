@@ -21,13 +21,16 @@ public final class SqlPreparedQuery {
 			+ "select id from app_schema.user where username = ?)"
 			+ "and role in ('admin', 'regular'))";
 
-	public static final String SQL_GET_NON_USER_PROJECTS = "select name, role, timestamp "
+	public static final String SQL_GET_NON_USER_PROJECTS = "select project.id, name, role, timestamp "
 			+ "from app_schema.project left join app_schema.user_project on id = project_id "
 			+ "left join app_schema.user u on user_id = u.id "
 			+ "where "
 			+ "(username = ? and role not in ('admin', 'regular')) or (username <> ? or username is null)";
 
 	public static final String SQL_GET_PROJECT_BY_ID = "select id, name from app_schema.project where id = ?;";
+
+	public static final String SQL_INSERT_INTO_USER_PROJECT = "INSERT INTO app_schema.user_project(user_id, project_id, role) "
+			+ "VALUES (?, ?, ?)";
 
 	private SqlPreparedQuery() {
 	};

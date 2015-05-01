@@ -15,7 +15,9 @@ import javax.persistence.TypedQuery;
 
 import com.apetkova.tm.base.Project;
 import com.apetkova.tm.database.Database;
+import com.apetkova.tm.database.SqlPreparedQuery;
 import com.apetkova.tm.details.ProjectDetails;
+import com.apetkova.tm.utils.Role;
 
 public class ProjectDao {
 
@@ -86,10 +88,11 @@ public class ProjectDao {
 			rs = ps.executeQuery();
 			ArrayList<String[]> result = new ArrayList<String[]>();
 			while (rs.next()) {
-				String[] row = new String[3];
-				row[0] = rs.getString("name");
-				row[1] = rs.getString("role");
-				row[2] = rs.getString("timestamp");
+				String[] row = new String[4];
+				row[0] = rs.getString("id");
+				row[1] = rs.getString("name");
+				row[2] = rs.getString("role");
+				row[3] = rs.getString("timestamp");
 				result.add(row);
 			}
 			return result;
@@ -142,5 +145,31 @@ public class ProjectDao {
 		TypedQuery<Project> query = em.createNamedQuery("Project.findAll",
 				Project.class);
 		return query.getResultList();
+	}
+
+	public boolean requestAccess(String username, int id) {
+		UserDao ud = new UserDao();
+		int user_id = ud.loadUser(username).id;
+		PreparedStatement ps = null;
+
+		db.connect();
+		try {
+			ps = db.getConnection().prepareStatement(
+					SqlPreparedQuery.SQL_INSERT_INTO_USER_PROJECT);
+			ps.setInt(1, user_id);
+			ps.setInt(2, id);
+			ps.setString(3, Role.PENDING.name().toLowerCase());
+			return ps.executeUpdate() > 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				ps.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

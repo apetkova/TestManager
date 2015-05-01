@@ -41,7 +41,7 @@
 </noscript>
 <!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 <script>
-var username;
+var username = "";
 function getCurrentUser(){
 	$.ajax({
 		url : "/TestManagerAPI/rest/user/me",
@@ -73,7 +73,7 @@ function getCurrentUser(){
 						html += projects[i].timestamp;
 					}
 					else{
-						html += "<a href=\"\" onclick=\"requestAccess(" + projects[i].id + ")\">Request Access</a>";
+					    html += "<a href=\"#\" onclick=\"requestAccess(" + projects[i].id + ")\">Request access</a>";
 						html += "</td><td>";
 					}
 					html += "</td></tr>";
@@ -86,27 +86,10 @@ function getCurrentUser(){
 		});
 	};
 	
-function requestAccess(project_id){
-$.ajax({
-		url : "/TestManagerAPI/rest/project/requestaccess",
-		method: "post",
-		contentType: "application/json;",
-		data: JSON.stringify({ "username" : username, "id" : project_id}),
-		dataType : "text",
-		success : function(result, textStatus, jqXHR) {
-			if (result == "true"){
-				alert("Access request was successfully created!");
-				insertNewProjects(username);
-				}
-			else {
-			alert("Access request failed!");
-			}
-		},
-		error : function(jqXHR, textStatus, errorThrown) {
-			alert('update Stock error: ' + textStatus + " " + errorThrown);
-		}
-	});
-};
+function requestAccess(projectId){
+
+}
+	
 </script>
 </head>
 
@@ -134,20 +117,22 @@ $.ajax({
 	</div>
 
 	<!-- Main -->
-<section class="wrapper style1">
+	<section class="wrapper style1">
 				<div class="container">
-					<div id="content" align="center">
-					
+					<div id="content"  align="center">
+	
 				<!-- Content -->
+				
 				<table id="new_projects" class = "projects">
 				<thead><td>Project Name</td><td>User Role</td><td>Timestamp</td></thead>
 				
 				</table>
 				
-				</div>
-			</div>
+			
 		
-	</section>
+	</div>
+	</div>
+	<section>
 
 
 	<!-- Footer -->

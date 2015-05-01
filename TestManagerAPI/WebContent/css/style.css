@@ -430,6 +430,26 @@
 				background-image: linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0.15)), url("images/bg01.png");
 				color: #fff;
 			}
+			
+		table.projects {
+		margin: 0px;
+		float: none;
+		position: center;
+		width: 70%;
+		border: 2px solid black;
+		}
+		
+		table.projects thead {
+			font-weight: 600;
+			border: 2px solid black;
+
+		}
+		
+		table.projects td {
+		border: 1px #ccc;
+		border-style: dashed;
+		}
+	
 
 /* Button */
 
@@ -737,6 +757,13 @@
 	border: 0;
 	font-weight: 600;
     }
+	
+	div.main{
+	display: block;
+	background-color: #fff;
+	text-align: center;
+	padding: 20px;
+	}
 
 /* Banner */
 

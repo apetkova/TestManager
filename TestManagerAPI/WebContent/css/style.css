@@ -448,6 +448,12 @@
 		table.projects td {
 		border: 1px #ccc;
 		border-style: dashed;
+		vertical-align: bottom;
+		padding: 3px 3px 2px 3px;
+		}
+		
+		table.projects a {
+		font-weight: 600;
 		}
 	
 
@@ -617,6 +623,24 @@
 		#header > div.identity > a {
 			color: #37c0fb;
 			}
+			
+		#header > div.title{
+			padding: 0px 0px 0px 5px;
+			margin-bottom: -10px;
+			margin-top: -20px;
+			text-align: left;
+			vertical-align: baseline;
+			font-weight: 600;
+			font-size: 3em;
+			color: #333;
+			text-decoration: none;
+		}
+		#header > div.title > em{
+			font-weight: 600;
+			font-size: 60%;
+			color: #555;
+			font-style: normal;
+		}
 		
 	#nav {
 		cursor: default;

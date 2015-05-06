@@ -49,7 +49,7 @@ public class ProjectDao {
 
 	}
 
-	public ArrayList<String> getUserProjects(String username) {
+	public ArrayList<ProjectDetails> getUserProjects(String username) {
 		db.connect();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -57,9 +57,12 @@ public class ProjectDao {
 			ps = db.getConnection().prepareStatement(SQL_GET_USER_PROJECTS);
 			ps.setString(1, username);
 			rs = ps.executeQuery();
-			ArrayList<String> result = new ArrayList<String>();
+			ArrayList<ProjectDetails> result = new ArrayList<ProjectDetails>();
 			while (rs.next()) {
-				result.add(rs.getString("name"));
+				ProjectDetails details = new ProjectDetails();
+				details.id = rs.getInt("id");
+				details.name = rs.getString("name");
+				result.add(details);
 			}
 			return result;
 		} catch (Exception e) {

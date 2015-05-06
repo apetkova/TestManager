@@ -16,7 +16,8 @@ public final class SqlPreparedQuery {
 	public static final String SQL_INSERT_NEW_USER = "INSERT INTO app_schema.user(username, password, email, weight, height, age,sex, lang)"
 			+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
-	public static final String SQL_GET_USER_PROJECTS = "select name from app_schema.project where id in ("
+	// queries for app_schema.project table
+	public static final String SQL_GET_USER_PROJECTS = "select id, name from app_schema.project where id in ("
 			+ "select project_id from app_schema.user_project where user_id in ("
 			+ "select id from app_schema.user where username = ?)"
 			+ "and role in ('admin', 'regular'))";
@@ -31,6 +32,12 @@ public final class SqlPreparedQuery {
 
 	public static final String SQL_INSERT_INTO_USER_PROJECT = "INSERT INTO app_schema.user_project(user_id, project_id, role) "
 			+ "VALUES (?, ?, ?)";
+
+	// queries for app_schema.suite table
+	public static final String SQL_GET_PROJECT_SUITES = "select id, name, created from app_schema.suite where project_id = ?";
+
+	// queries for app_schema.suite table
+	public static final String SQL_GET_SUITE_TEST_COUNT = "select count(1) from app_schema.testcase where suite_id = ?";
 
 	private SqlPreparedQuery() {
 	};

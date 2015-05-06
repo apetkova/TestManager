@@ -1,6 +1,7 @@
 package com.apetkova.tm.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -31,8 +32,14 @@ public class ProjectServices {
 	public Response getProjects(@PathParam("username") String username)
 			throws JsonParseException, JsonMappingException, IOException {
 		projectDao = new ProjectDao();
-		
-		return Response.ok(projectDao.getUserProjects(username).toString()).build();
+		JSONArray jsonArr = new JSONArray();
+		ArrayList<ProjectDetails> projects = projectDao
+				.getUserProjects(username);
+		for (ProjectDetails pd : projects) {
+			JSONObject json = pd.toJson();
+			jsonArr.add(json);
+		}
+		return Response.ok(jsonArr.toJSONString()).build();
 	}
 
 	@GET
@@ -67,7 +74,7 @@ public class ProjectServices {
 			json.put("timestamp", project[3]);
 			array.add(json);
 		}
-		
+
 		return Response.ok(array.toJSONString(), MediaType.TEXT_PLAIN).build();
 	}
 

@@ -6,17 +6,17 @@
 -->
 <html>
 	<head>
-		<title>Welcome to TM</title>
+		<title>TestManager Home</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
 		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
-		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery-2.1.4.min.js"></script>
 		<script src="js/jquery.dropotron.min.js"></script>
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-layers.min.js"></script>
 		<script src="js/init.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script type="text/javascript">
 		jQuery(document).ready(function(){
 			$("#loginBtn").click(function(){
@@ -34,28 +34,15 @@
 							window.location.replace("/TestManagerAPI/user_home.html");
 						}
 						else {
+							alert("Login was unsuccessful. Please try again!");
 							$("#login").clear();
 						}
 					},
-					error: function(jqXHR, textStatus, errorThrown){ alert('update Stock error: ' + textStatus); }
- 
+					error: function(jqXHR, textStatus, errorThrown){ 
+						alert('Server error: ' + textStatus);
+						$("#login").clear();
+						}
 				});
-/* 				.done(function(result) {
-					alert(JSON.stringify(result));
-					if(result == 'true'){
-					$.get("user_home.html");
-					}
-					else {
-					alert(result);
-					$("form#login").clear();
-					}
-				})
-			.fail(function(jqXHR) {
-					// error handler
-					alert(JSON.stringify(jqXHR));
-					$("form#login").clear();
-
-				});   */
 			});	 
 		});
 		</script>
@@ -72,8 +59,7 @@
 			<div id="header">
 
 				<!-- Logo -->
-					<h1><a href="index.html" id="logo">Welcome <em>to TM</em></a></h1>
-					
+					<h1><a href="index.html" id="logo"><em>Welcome to the </em>TestManager</a></h1>
 
 				<!-- Nav -->
 					<nav id="nav">

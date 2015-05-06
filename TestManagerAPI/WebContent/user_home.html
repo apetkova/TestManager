@@ -20,7 +20,7 @@
 	content=""
 />
 <!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
-<script src="js/jquery.min.js"></script>
+		<script src="js/jquery-2.1.4.min.js"></script>
 <script src="js/jquery.dropotron.min.js"></script>
 <script src="js/skel.min.js"></script>
 <script src="js/skel-layers.min.js"></script>
@@ -51,7 +51,8 @@ function getCurrentUser(){
 			insertProjects(username);
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
-			alert('update Stock error: ' + textStatus + " " + errorThrown);
+			alert('Your session has ended!');
+			window.location.replace("/TestManagerAPI/index.html");
 		}
 	});
 };
@@ -61,12 +62,13 @@ function getCurrentUser(){
 			url : "/TestManagerAPI/rest/project/getprojects/" + username,
 			dataType : "text",
 			success : function(result, textStatus, jqXHR) {
-				var stripped = result.replace("[", "").replace("]", "");
-				projects = stripped.split(",");
+				projects = $.parseJSON(result);
 				for (i = 0; i < projects.length; i++) {
-					var html = "<section class=\"4u 12u(narrower)\"><div class=\"box highlight\"><i class=\"icon major fa-paper-plane\"></i>";
-					html += "<h3>" + projects[i] + "</h3>";
-					html += "</div></section>";
+					var url = "project.html?" + $.param(projects[i]);
+					console.log(url);
+					var html = "<section class=\"4u 12u(narrower)\"><div class=\"box highlight\"><a href=\"" + url + "\"><i class=\"icon major fa-paper-plane\"></i>";
+					html += "<h3>" + projects[i].name + "</h3>";
+					html += "</a></div></section>";
 					document.getElementById("project_container").innerHTML += html;
 				}
 			},
@@ -83,7 +85,10 @@ function getCurrentUser(){
 
 	<!-- Header -->
 	<div id="header">
-	<div class="identity" align="right">
+	<div width="50%" class="title" align="left">
+	<em>the</em>TestManager
+	</div>
+	<div width = "50%" class="identity" align="right">
 			<ul id = "me">
 			<li><a id="current_user" href=""></a>
 					<ul>

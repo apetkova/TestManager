@@ -35,12 +35,12 @@
 						}
 						else {
 							alert("Login was unsuccessful. Please try again!");
-							$("#login").clear();
+							$("#login").reset();
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown){ 
 						alert('Server error: ' + textStatus);
-						$("#login").clear();
+						$("#login").reset();
 						}
 				});
 			});	 

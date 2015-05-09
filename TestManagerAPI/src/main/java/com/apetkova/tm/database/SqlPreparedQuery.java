@@ -39,6 +39,11 @@ public final class SqlPreparedQuery {
 	// queries for app_schema.suite table
 	public static final String SQL_GET_SUITE_TEST_COUNT = "select count(1) from app_schema.testcase where suite_id = ?";
 
+	public static final String SQL_GET_TEST_CASES = "select id, name, descr, type, automated from app_schema.testcase where suite_id = ?";
+
+	public static final String SQL_GET_LAST_SUITE_RUN = "select test_id, timestamp, result from app_schema.test_run"
+			+ " where id in (select id from app_schema.test_run where test_id in (%s) group by id order by timestamp desc limit 1)";
+
 	private SqlPreparedQuery() {
 	};
 }

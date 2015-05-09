@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<!--
+	Arcana by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+<title>Project home</title>
+<meta
+	http-equiv="content-type"
+	content="text/html; charset=utf-8"
+/>
+<meta
+	name="description"
+	content=""
+/>
+<meta
+	name="keywords"
+	content=""
+/>
+<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/jquery.dropotron.min.js"></script>
+<script src="js/skel.min.js"></script>
+<script src="js/skel-layers.min.js"></script>
+<script src="js/init.js"></script>
+<noscript>
+	<link
+		rel="stylesheet"
+		href="css/skel.css"
+	/>
+	<link
+		rel="stylesheet"
+		href="css/style.css"
+	/>
+	<link
+		rel="stylesheet"
+		href="css/style-wide.css"
+	/>
+</noscript>
+<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+<script>
+var suite;
+var suite_id;
+function getCurrentUser(){
+	$.ajax({
+		url : "/TestManagerAPI/rest/user/me",
+		dataType : "text",
+		success : function(result, textStatus, jqXHR) {
+			var username = JSON.parse(result).username;
+			document.getElementById("current_user").innerHTML += username + "&nbsp;&nbsp;";
+			insertSuiteName();
+			insertProjectName();
+			insertNew();
+			insertTests();
+	
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('Your session has ended!');
+			window.location.replace("/TestManagerAPI/index.html");
+		}
+	});
+};
+	function insertSuiteName() {
+		suite = getParameterByName("name");
+		suite_id = getParameterByName("id");
+		document.getElementById("suite_name").innerHTML += suite;
+	};
+	
+	function insertTests(){
+		var suites = [];
+		$.ajax({
+			url : "/TestManagerAPI/rest/testcase/gettests/" + suite_id,
+			dataType : "text",
+			success : function(result, textStatus, jqXHR) {
+				tests = $.parseJSON(result);
+				for (i = 0; i < tests.length; i++) {
+					testId = {"id" : tests[i].id};
+					var url = "suite.html?" + $.param(testId);
+					var html = "<tr><td>";
+					html += tests[i].name;
+					html += "</td><td>";
+					html += tests[i].descr;
+					html += "</td><td>";
+					html += tests[i].type;
+					html += "</td><td>";
+					html += tests[i].automated;
+					html += "</td><td>";
+					if(tests[i].lastRun){
+						html += tests[i].lastRun;
+						html += "</td><td>";
+						html += tests[i].lastResult;
+					}
+					else{
+						html += "N/A</td><td>";
+						html += "</td><td>";
+					}
+					html += "Edit</td><td>Delete</td></tr>";
+					document.getElementById("test_cases").innerHTML += html;
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert('update Stock error: ' + textStatus);
+			}
+		});
+	};
+	
+	function insertProjectName() {
+		var projectJSON = {"name": getParameterByName("project_name"), "id": getParameterByName("project_id")};
+		var url = "project.html?" + $.param(projectJSON);
+		document.getElementById("project_name").innerHTML += "<a href=\"" + url + "\" >" + projectJSON.name + "</a>";
+	};
+	
+	function getParameterByName(name) {
+	    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+	    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+	};
+	
+	function insertNew(){
+	var suiteJSON = {"name": suite, "id": suite_id};
+	var html = "new_test.html?" + $.param(suiteJSON);
+	document.getElementById("new").innerHTML += "<a href=\"" + html + "\">Add New Test</a>";
+	}
+	
+</script>
+</head>
+
+<body onload="getCurrentUser()">
+
+	<!-- Header -->
+	<div id="header">
+	<div width="50%" class="title" align="left">
+	<em>the</em>TestManager
+	</div>
+	<div width = "50%" class="identity" align="right">
+			<ul id = "me">
+			<li><a id="current_user" href=""></a>
+					<ul>
+					<li><a href="#">Settings</a></li>
+					<li><a href="#">Logout</a></li>
+				</ul>
+			</li>
+			</ul>
+	</div>
+		<!-- Nav -->
+		<nav id="nav">
+			<ul>
+				<li><a href="user_home.html">My Projects</a></li>
+				<li id="project_name"></li>
+				<li class="current"><a href="#" id="suite_name"></a></li>
+			</ul>
+		</nav>
+
+	</div>
+	<div id="new">
+	</div>
+
+	<!-- Main -->
+	<section class="wrapper style1">
+	
+			<div class="container">
+					<div id="content" align="center">
+					
+				<!-- Content -->
+				<table id="test_cases" class = "projects">
+				<thead><td>Test Name</td><td>Description</td><td>Type</td><td>Automated</td><td>Last Run</td><td>Last Result</td><td></td><td></td></thead>
+				
+				</table>
+				
+				</div>
+			</div>
+			
+		
+	</section>
+
+
+	<!-- Footer -->
+	<div id="footer">
+		<!-- Copyright -->
+		<div class="copyright">
+			<ul class="menu">
+				<li>&copy; Untitled. All rights reserved</li>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+		</div>
+
+	</div>
+
+</body>
+</html>

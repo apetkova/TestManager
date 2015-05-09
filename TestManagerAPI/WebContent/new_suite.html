@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<!--
+	Arcana by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+<title>Add new suite</title>
+<meta
+	http-equiv="content-type"
+	content="text/html; charset=utf-8"
+/>
+<meta
+	name="description"
+	content=""
+/>
+<meta
+	name="keywords"
+	content=""
+/>
+<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/jquery.dropotron.min.js"></script>
+<script src="js/skel.min.js"></script>
+<script src="js/skel-layers.min.js"></script>
+<script src="js/init.js"></script>
+<noscript>
+	<link
+		rel="stylesheet"
+		href="css/skel.css"
+	/>
+	<link
+		rel="stylesheet"
+		href="css/style.css"
+	/>
+	<link
+		rel="stylesheet"
+		href="css/style-wide.css"
+	/>
+</noscript>
+<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+<script>
+var username;
+function getCurrentUser(){
+	$.ajax({
+		url : "/TestManagerAPI/rest/user/me",
+		dataType : "text",
+		success : function(result, textStatus, jqXHR) {
+			username = JSON.parse(result).username;
+			document.getElementById("current_user").innerHTML += username + "&nbsp;&nbsp;";
+			insertProjectName();
+			document.getElementById("selector").addEventListener("change",function(){
+			document.getElementById("files").innerHTML=
+			document.getElementById("selector").files[0].name;
+			});
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			alert('Your session has ended!');
+			window.location.replace("/TestManagerAPI/index.html");		
+		}
+	});
+};
+
+function insertProjectName() {
+		var projectJSON = {"name": getParameterByName("name"), "id": getParameterByName("id")};
+		var url = "project.html?" + $.param(projectJSON);
+		document.getElementById("project_name").innerHTML += "<a href=\"" + url + "\" >" + projectJSON.name + "</a>";
+	};
+
+function getParameterByName(name) {
+	    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+	    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+	};
+</script>
+</head>
+
+<body onload="getCurrentUser()">
+
+	<!-- Header -->
+	<div id="header">
+	<div width="50%" class="title" align="left">
+	<em>the</em>TestManager
+	</div>
+	<div width = "50%" class="identity" align="right">
+			<ul id = "me">
+			<li><a id="current_user" href=""></a>
+					<ul>
+					<li><a href="#">Settings</a></li>
+					<li><a href="#">Logout</a></li>
+				</ul>
+			</li>
+			</ul>
+	</div>
+		<!-- Nav -->
+		<nav id="nav">
+			<ul>
+				<li><a href="user_home.html">My Projects</a></li>
+				<li id="project_name"></li>
+				<li class="current"><a href="#">Add new suite</a></li>
+			</ul>
+		</nav>
+
+	</div>
+
+	<!-- Main -->
+<section class="wrapper style1">
+				<div class="container">
+					<div id="content" align="center">
+					
+				<!-- Content -->
+				<p>Choose your way to create a new test suite - you can upload TestNG files and allow the TestManager to extract
+				suite and test case information for you, or you can create an empty suite and add your test cases manually.</p>
+				</br>
+				<input type="file" id="selector"/><div class = "upload">Upload TestNG suite xml</div>
+				<div>OR</div>
+				<input type="file" id="selector"/><div class = "upload">Upload TestNG result xml</div>
+				OR
+				<p><b>Create empty suite:</b></p>
+				<form id="new_suite" action="">
+								<div style="width:30%">
+								<br/>
+									<div class="12u">
+										<input type="text" name="suitename" id="suitename" placeholder="Suite name" />
+									</div>
+									<br/>
+									<div class="12u">
+										<ul class="actions">
+											<li><input class="button alt" value="Submit" id="submitBtn"/></li>
+										</ul>
+									</div>
+								</div>
+				</form>	
+				
+				</div>
+			</div>
+		
+	</section>
+
+
+	<!-- Footer -->
+	<div id="footer">
+		<!-- Copyright -->
+		<div class="copyright">
+			<ul class="menu">
+				<li>&copy; Untitled. All rights reserved</li>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+		</div>
+
+	</div>
+
+</body>
+</html>

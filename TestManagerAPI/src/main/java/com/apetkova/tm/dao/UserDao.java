@@ -44,7 +44,7 @@ public class UserDao {
 	}
 
 	public boolean usernameExists(String username) {
-
+		db.connect();
 		boolean result = false;
 		try {
 			PreparedStatement ps = db.getConnection().prepareStatement(

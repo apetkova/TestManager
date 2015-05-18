@@ -3,6 +3,7 @@ package com.apetkova.tm.dao;
 import static com.apetkova.tm.database.SqlPreparedQuery.SQL_GET_LAST_SUITE_RUN;
 import static com.apetkova.tm.database.SqlPreparedQuery.SQL_GET_SUITE_TEST_COUNT;
 import static com.apetkova.tm.database.SqlPreparedQuery.SQL_GET_TEST_CASES;
+import static com.apetkova.tm.database.SqlPreparedQuery.SQL_INSERT_TEST;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +14,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceUnit;
 
+import com.apetkova.tm.base.TestCase;
 import com.apetkova.tm.database.Database;
 import com.apetkova.tm.details.TestDetails;
 
@@ -124,5 +126,31 @@ public class TestCaseDao {
 			}
 		}
 		return 0;
+	}
+
+	public boolean addNewTest(TestCase testCase) {
+		db.connect();
+		PreparedStatement ps = null;
+		try {
+			ps = db.getConnection().prepareStatement(SQL_INSERT_TEST);
+			ps.setString(1, testCase.getName());
+			ps.setInt(2, testCase.getSuiteId());
+			ps.setString(3, testCase.getDescr());
+			ps.setBoolean(4, testCase.getAutomated());
+			ps.setString(5, testCase.getType());
+			ps.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e);
+			return false;
+		} finally {
+			try {
+				ps.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(e);
+			}
+		}
 	}
 }

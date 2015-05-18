@@ -48,7 +48,8 @@ function getCurrentUser(){
 		success : function(result, textStatus, jqXHR) {
 			var username = JSON.parse(result).username;
 			document.getElementById("current_user").innerHTML += username + "&nbsp;&nbsp;";
-			insertProjects(username);
+			insertProjects(username, "admin");
+			insertProjects(username, "regular");
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert('Your session has ended!');
@@ -56,20 +57,25 @@ function getCurrentUser(){
 		}
 	});
 };
-	function insertProjects(username) {
+	function insertProjects(username, role) {
 		var projects = [];
 		$.ajax({
-			url : "/TestManagerAPI/rest/project/getprojects/" + username,
+			url : "/TestManagerAPI/rest/project/getprojects/" + username + "/" + role,
 			dataType : "text",
 			success : function(result, textStatus, jqXHR) {
 				projects = $.parseJSON(result);
-				for (i = 0; i < projects.length; i++) {
-					var url = "project.html?" + $.param(projects[i]);
-					console.log(url);
-					var html = "<section class=\"4u 12u(narrower)\"><div class=\"box highlight\"><a href=\"" + url + "\"><i class=\"icon major fa-paper-plane\"></i>";
-					html += "<h3>" + projects[i].name + "</h3>";
-					html += "</a></div></section>";
-					document.getElementById("project_container").innerHTML += html;
+				if(projects.length == 0){
+					var html = "<p style=\"text-align:left;margin-left:30px;\"> No " + role + "-access projects found.";
+					document.getElementById(role + "_project_container").innerHTML += html;
+				} else {
+					for (i = 0; i < projects.length; i++) {
+						var url = "project.html?" + $.param(projects[i]);
+						console.log(url);
+						var html = "<section class=\"4u 12u(narrower)\"><div class=\"box highlight\"><a href=\"" + url + "\"><i class=\"icon major fa-paper-plane\"></i>";
+						html += "<h3>" + projects[i].name + "</h3>";
+						html += "</a></div></section>";
+						document.getElementById(role + "_project_container").innerHTML += html;
+					}
 				}
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
@@ -111,13 +117,15 @@ function getCurrentUser(){
 	</div>
 
 	<!-- Main -->
-	<section class="wrapper style1">
+	<section class="wrapper style1" style="padding-top: 30px;">
 	
 				<!-- Content -->
-				<div align = "center" class="row" id="project_container">
+				<span id="project">Admin access projects</span>
+				<div align = "center" class="row" id="admin_project_container">
 				</div>
-			
-		
+				<span id="project">Regular access projects</span>
+				<div align = "center" class="row" id="regular_project_container">
+				</div>
 	</section>
 
 
@@ -126,11 +134,9 @@ function getCurrentUser(){
 		<!-- Copyright -->
 		<div class="copyright">
 			<ul class="menu">
-				<li>&copy; Untitled. All rights reserved</li>
-				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+				<li>&copy; Test Manager. All rights reserved</li>
 			</ul>
 		</div>
-
 	</div>
 
 </body>

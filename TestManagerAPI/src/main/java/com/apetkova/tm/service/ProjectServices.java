@@ -27,14 +27,16 @@ public class ProjectServices {
 
 	private ProjectDao projectDao;
 
+	@SuppressWarnings("unchecked")
 	@GET
-	@Path("/getprojects/{username}")
-	public Response getProjects(@PathParam("username") String username)
-			throws JsonParseException, JsonMappingException, IOException {
+	@Path("/getprojects/{username}/{role}")
+	public Response getProjects(@PathParam("username") String username,
+			@PathParam("role") String role) throws JsonParseException,
+			JsonMappingException, IOException {
 		projectDao = new ProjectDao();
 		JSONArray jsonArr = new JSONArray();
-		ArrayList<ProjectDetails> projects = projectDao
-				.getUserProjects(username);
+		ArrayList<ProjectDetails> projects = projectDao.getUserProjects(
+				username, role);
 		for (ProjectDetails pd : projects) {
 			JSONObject json = pd.toJson();
 			jsonArr.add(json);

@@ -20,7 +20,7 @@ public final class SqlPreparedQuery {
 	public static final String SQL_GET_USER_PROJECTS = "select id, name from app_schema.project where id in ("
 			+ "select project_id from app_schema.user_project where user_id in ("
 			+ "select id from app_schema.user where username = ?)"
-			+ "and role in ('admin', 'regular'))";
+			+ "and role in (?))";
 
 	public static final String SQL_GET_NON_USER_PROJECTS = "select project.id, name, role, timestamp "
 			+ "from app_schema.project left join app_schema.user_project on id = project_id "
@@ -43,6 +43,10 @@ public final class SqlPreparedQuery {
 
 	public static final String SQL_GET_LAST_SUITE_RUN = "select test_id, timestamp, result from app_schema.test_run"
 			+ " where id in (select id from app_schema.test_run where test_id in (%s) group by id order by timestamp desc limit 1)";
+
+	public static final String SQL_INSERT_TEST = "INSERT INTO app_schema.testcase("
+			+ "name, suite_id, descr, automated, type) "
+			+ "VALUES (?, ?, ?, ?, ?)";
 
 	private SqlPreparedQuery() {
 	};

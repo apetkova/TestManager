@@ -51,8 +51,8 @@ function getCurrentUser(){
 			document.getElementById("current_user").innerHTML += username + "&nbsp;&nbsp;";
 			insertProjectName();
 			document.getElementById("selector").addEventListener("change",function(){
-			document.getElementById("files").innerHTML=
-			document.getElementById("selector").files[0].name;
+//			document.getElementById("files").innerHTML=
+//			document.getElementById("selector").files[0].name;
 			});
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
@@ -117,8 +117,9 @@ function getParameterByName(name) {
 				<input type="file" id="selector"/><div class = "upload">Upload TestNG result xml</div>
 				OR
 				<p><b>Create empty suite:</b></p>
-				<form id="new_suite" action="">
+				<form id="new_suite" action="/TestManagerAPI/rest/file/upload" method="post" enctype="multipart/form-data">
 								<div style="width:30%">
+								<input type="file" name="uploadedFile" id="uploadedFile">
 								<br/>
 									<div class="12u">
 										<input type="text" name="suitename" id="suitename" placeholder="Suite name" />
@@ -126,7 +127,7 @@ function getParameterByName(name) {
 									<br/>
 									<div class="12u">
 										<ul class="actions">
-											<li><input class="button alt" value="Submit" id="submitBtn"/></li>
+											<li><input type="submit" class="button alt" value="Submit" id="submitBtn"/></li>
 										</ul>
 									</div>
 								</div>

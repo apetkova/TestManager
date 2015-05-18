@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
+import com.apetkova.tm.base.TestCase;
+import com.apetkova.tm.dao.TestCaseDao;
+
 public class Database {
 
 	private static final String DRIVER_NAME = "org.postgresql.Driver";
@@ -54,5 +57,13 @@ public class Database {
 		// User user = ud.loadUser("admin");
 		// ProjectDao pd = new ProjectDao();
 		// System.out.println(pd.requestAccess("admin", 4));
+		TestCase test = new TestCase();
+		test.setName("sgnup");
+		test.setDescr("sign up");
+		test.setAutomated(false);
+		test.setSuiteId(1);
+		test.setType("functional");
+		TestCaseDao testDao = new TestCaseDao();
+		testDao.addNewTest(test);
 	}
 }

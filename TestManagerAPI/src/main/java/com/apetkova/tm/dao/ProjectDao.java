@@ -49,13 +49,25 @@ public class ProjectDao {
 
 	}
 
-	public ArrayList<ProjectDetails> getUserProjects(String username) {
+	public ArrayList<ProjectDetails> getUserProjects(String username,
+			String role) {
 		db.connect();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
+		String sql = SQL_GET_USER_PROJECTS;
+		if (role.equals("all")) {
+			sql.replaceAll("?", "?, ?");
+			sql.replaceFirst("?, ?", "?");
+		}
 		try {
-			ps = db.getConnection().prepareStatement(SQL_GET_USER_PROJECTS);
+			ps = db.getConnection().prepareStatement(sql);
 			ps.setString(1, username);
+			if (role.equals("all")) {
+				ps.setString(2, "admin");
+				ps.setString(3, "regular");
+			} else {
+				ps.setString(2, role);
+			}
 			rs = ps.executeQuery();
 			ArrayList<ProjectDetails> result = new ArrayList<ProjectDetails>();
 			while (rs.next()) {

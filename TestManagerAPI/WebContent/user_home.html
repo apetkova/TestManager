@@ -69,7 +69,7 @@ function getCurrentUser(){
 					document.getElementById(role + "_project_container").innerHTML += html;
 				} else {
 					for (i = 0; i < projects.length; i++) {
-						var url = "project.html?" + $.param(projects[i]);
+						var url = "project.html?" + $.param(projects[i]) + "&role=" + role;
 						console.log(url);
 						var html = "<section class=\"4u 12u(narrower)\"><div class=\"box highlight\"><a href=\"" + url + "\"><i class=\"icon major fa-paper-plane\"></i>";
 						html += "<h3>" + projects[i].name + "</h3>";
@@ -98,8 +98,8 @@ function getCurrentUser(){
 			<ul id = "me">
 			<li><a id="current_user" href=""></a>
 					<ul>
-					<li><a href="#">Settings</a></li>
-					<li><a href="#">Logout</a></li>
+					<li><a href="profile.html">Settings</a></li>
+					<li><a href="index.html">Logout</a></li>
 				</ul>
 			</li>
 			</ul>

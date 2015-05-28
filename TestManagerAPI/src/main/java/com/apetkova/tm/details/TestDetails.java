@@ -1,6 +1,5 @@
 package com.apetkova.tm.details;
 
-import java.util.Date;
 import java.util.List;
 
 public class TestDetails extends EntityDetails {
@@ -10,7 +9,7 @@ public class TestDetails extends EntityDetails {
 	public String descr;
 	public String type;
 	public String automated;
-	public Date lastRun;
+	public String lastRun;
 	public String lastResult;
 
 	public static String idsToArray(List<TestDetails> details) {

@@ -5,4 +5,6 @@ public class UserDetails extends EntityDetails {
 	public String username;
 	public String password;
 	public String email;
+	public String firstName;
+	public String lastName;
 }

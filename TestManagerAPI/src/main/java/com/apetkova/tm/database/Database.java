@@ -5,8 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import com.apetkova.tm.base.TestCase;
-import com.apetkova.tm.dao.TestCaseDao;
+import com.apetkova.tm.utils.PasswordEncryptor;
 
 public class Database {
 
@@ -57,13 +56,7 @@ public class Database {
 		// User user = ud.loadUser("admin");
 		// ProjectDao pd = new ProjectDao();
 		// System.out.println(pd.requestAccess("admin", 4));
-		TestCase test = new TestCase();
-		test.setName("sgnup");
-		test.setDescr("sign up");
-		test.setAutomated(false);
-		test.setSuiteId(1);
-		test.setType("functional");
-		TestCaseDao testDao = new TestCaseDao();
-		testDao.addNewTest(test);
+		System.out.println(PasswordEncryptor.encryptPassword("ppa",
+				PasswordEncryptor.generateSalt()));
 	}
 }

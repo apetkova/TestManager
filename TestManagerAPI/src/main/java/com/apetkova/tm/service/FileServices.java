@@ -2,6 +2,8 @@ package com.apetkova.tm.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +18,12 @@ import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
+import com.apetkova.tm.details.TestDetails;
+import com.apetkova.tm.details.UploadFileResponse;
 import com.apetkova.tm.utils.FileUtils;
+import com.apetkova.tm.xml.Test;
+import com.apetkova.tm.xml.TestClass;
+import com.apetkova.tm.xml.TestMethod;
 import com.apetkova.tm.xml.TestSuite;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -62,13 +69,46 @@ public class FileServices {
 
 		}
 
+		UploadFileResponse response = new UploadFileResponse();
+		response.suiteName = suite.getName();
+		List<TestDetails> convertedTests = new ArrayList<TestDetails>();
+		Iterator<Test> testIter = suite.getTests().iterator();
+		while (testIter.hasNext()) {
+			Test nextTest = testIter.next();
+
+			if (nextTest != null && nextTest.getClasses() != null) {
+				Iterator<TestClass> classIter = nextTest.getClasses()
+						.iterator();
+				while (classIter.hasNext()) {
+					TestClass nextClass = classIter.next();
+
+					if (nextClass != null && nextClass.getMethods() != null) {
+						Iterator<TestMethod> methodIter = nextClass
+								.getMethods().iterator();
+						while (methodIter.hasNext()) {
+							TestMethod nextMethod = methodIter.next();
+
+							TestDetails nextConvertedTest = new TestDetails();
+							nextConvertedTest.name = nextMethod.getName();
+							nextConvertedTest.type = nextTest.getName();
+							nextConvertedTest.descr = "TestNG";
+							nextConvertedTest.automated = "true";
+
+							convertedTests.add(nextConvertedTest);
+						}
+					}
+				}
+			}
+
+			response.tests = convertedTests;
+		}
+
 		try {
-			return Response.status(200).entity(suite.toJsonString()).build();
+			return Response.status(200).entity(response.toJsonString()).build();
 		} catch (JsonProcessingException jpe) {
 			jpe.printStackTrace();
 			return Response.noContent().build();
 		}
 
 	}
-
 }

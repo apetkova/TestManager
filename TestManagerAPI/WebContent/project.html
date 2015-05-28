@@ -52,6 +52,7 @@ function getCurrentUser(){
 			document.getElementById("current_user").innerHTML += username + "&nbsp;&nbsp;";
 			insertProjectName();
 			insertNew();
+			insertAdminLink(true);
 			insertSuites();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
@@ -100,6 +101,63 @@ function getCurrentUser(){
 	document.getElementById("new").innerHTML += "<a href=\"" + html + "\">Add New Test Suite</a>";
 	}
 	
+	function insertAdminLink(show) {
+		if (getParameterByName("role") == "admin"){
+			if (show){
+				document.getElementById("adminLink").innerHTML = "<a href=\"javascript:showAdminPanel()\" class=\"blueUnderline\">Show Admin Panel</a><br/><br/>";
+			} else {
+				document.getElementById("adminLink").innerHTML = "<a href=\"javascript:hideAdminPanel()\" class=\"blueUnderline\">Hide Admin Panel</a><br/><br/>";
+			}	
+		}
+	}
+	
+	function showAdminPanel(){
+		$.ajax({
+			url : "/TestManagerAPI/rest/user/inproject/" + project_id + "/pending",
+			dataType : "text",
+			success : function(result, textStatus, jqXHR) {
+				userProjects = $.parseJSON(result);
+				var html = "<div style=\"width: 70%; text-align:left; font-size: 16pt; font-weight:600\">Awaiting Access:</div>";
+				html += "<table class = \"projects\"><thead><td>Username</td><td>Request Timestamp</td><td>Grant Access</td></thead>";
+				for (i = 0; i < userProjects.length; i++) {
+					html += "<tr><td>" + userProjects[i].username + "</td><td>" + userProjects[i].timestamp + "</td><td></td></tr>";
+				}
+				html += "</table><br/>";
+				document.getElementById("awaitingAccess").innerHTML += html;
+				$('#admin').addClass('panel');
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert('update Stock error: ' + textStatus);
+			}
+		});
+		
+		$.ajax({
+			url : "/TestManagerAPI/rest/user/inproject/" + project_id + "/regular",
+			dataType : "text",
+			success : function(result, textStatus, jqXHR) {
+				userProjects = $.parseJSON(result);
+				var html = "<div style=\"width: 70%; text-align:left; font-size: 16pt; font-weight:600\">Active Users:</div>";
+				html += "<table class = \"projects\"><thead><td>Username</td><td>Request Timestamp</td><td>Revoke Access</td></thead>";
+				for (i = 0; i < userProjects.length; i++) {
+					html += "<tr><td>" + userProjects[i].username + "</td><td>" + userProjects[i].timestamp + "</td><td></td></tr>";
+				}
+				html += "</table><br/>";
+				document.getElementById("accessGranted").innerHTML += html;
+				insertAdminLink(false);
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert('update Stock error: ' + textStatus);
+			}
+		});
+	}
+	
+	function hideAdminPanel(){
+		$('#admin').removeClass('panel');
+		document.getElementById("accessGranted").innerHTML = "";
+		document.getElementById("awaitingAccess").innerHTML = "";
+		insertAdminLink(true);
+	}
+	
 </script>
 </head>
 
@@ -114,8 +172,8 @@ function getCurrentUser(){
 			<ul id = "me">
 			<li><a id="current_user" href=""></a>
 					<ul>
-					<li><a href="#">Settings</a></li>
-					<li><a href="#">Logout</a></li>
+					<li><a href="profile.html">Settings</a></li>
+					<li><a href="index.html">Logout</a></li>
 				</ul>
 			</li>
 			</ul>
@@ -137,6 +195,12 @@ function getCurrentUser(){
 	
 				<!-- Content -->
 				<div class="row">
+					<div align = "center" id="admin" style="padding:0;">
+						<div id="adminLink" class="projectname"></div>
+						<div id="awaitingAccess" ></div>
+						<div id="accessGranted"></div>
+					</div>
+					<br/>
 					<div align = "center" id="suites_container">
 					</div>
 				</div>

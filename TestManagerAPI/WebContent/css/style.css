@@ -934,6 +934,12 @@
 				.wrapper.style3 .button:hover {
 					color: #37c0fb !important;
 				}
+				
+	.blueUnderline{
+	font-size: 18pt;
+	font-weight: 600;
+	text-decoration:underline;
+	}
 
 /* CTA */
 
@@ -995,4 +1001,8 @@
 		
 		.no-close .ui-dialog-titlebar-close {
 			display: none;
+		}
+		
+		.panel {
+		background-color: #FFF5EE;
 		}

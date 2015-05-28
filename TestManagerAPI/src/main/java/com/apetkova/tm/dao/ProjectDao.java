@@ -16,7 +16,9 @@ import javax.persistence.TypedQuery;
 import com.apetkova.tm.base.Project;
 import com.apetkova.tm.database.Database;
 import com.apetkova.tm.database.SqlPreparedQuery;
+import com.apetkova.tm.details.EntityDetails;
 import com.apetkova.tm.details.ProjectDetails;
+import com.apetkova.tm.details.UserProjectDetails;
 import com.apetkova.tm.utils.Role;
 
 public class ProjectDao {
@@ -92,25 +94,32 @@ public class ProjectDao {
 		return null;
 	}
 
-	public ArrayList<String[]> getNonUserProjects(String username) {
+	public List<UserProjectDetails> getNonUserProjects(String username) {
 		db.connect();
+		List<UserProjectDetails> details = new ArrayList<UserProjectDetails>();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
 			ps = db.getConnection().prepareStatement(SQL_GET_NON_USER_PROJECTS);
 			ps.setString(1, username);
-			ps.setString(2, username);
 			rs = ps.executeQuery();
-			ArrayList<String[]> result = new ArrayList<String[]>();
 			while (rs.next()) {
-				String[] row = new String[4];
-				row[0] = rs.getString("id");
-				row[1] = rs.getString("name");
-				row[2] = rs.getString("role");
-				row[3] = rs.getString("timestamp");
-				result.add(row);
+				UserProjectDetails upd = new UserProjectDetails();
+				upd.username = rs.getString("username");
+				if (upd.username == null) {
+					upd.role = null;
+					upd.timestamp = null;
+				} else {
+					upd.role = rs.getString("role");
+					upd.timestamp = EntityDetails.toStringDate(rs
+							.getTimestamp("timestamp"));
+				}
+
+				upd.projectId = rs.getInt("id");
+				upd.project = rs.getString("name");
+				details.add(upd);
 			}
-			return result;
+			return details;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(e);

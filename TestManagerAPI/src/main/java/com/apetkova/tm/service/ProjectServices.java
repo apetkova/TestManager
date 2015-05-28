@@ -18,6 +18,7 @@ import org.json.simple.JSONObject;
 import com.apetkova.tm.dao.ProjectDao;
 import com.apetkova.tm.details.ProjectDetails;
 import com.apetkova.tm.details.UserAccessDetails;
+import com.apetkova.tm.details.UserProjectDetails;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -66,14 +67,11 @@ public class ProjectServices {
 	public Response getNewProjects(@PathParam("username") String username)
 			throws JsonParseException, JsonMappingException, IOException {
 		projectDao = new ProjectDao();
-		List<String[]> projects = projectDao.getNonUserProjects(username);
+		List<UserProjectDetails> projects = projectDao
+				.getNonUserProjects(username);
 		JSONArray array = new JSONArray();
-		for (String[] project : projects) {
-			JSONObject json = new JSONObject();
-			json.put("id", project[0]);
-			json.put("project", project[1]);
-			json.put("role", project[2]);
-			json.put("timestamp", project[3]);
+		for (UserProjectDetails project : projects) {
+			JSONObject json = project.toJson();
 			array.add(json);
 		}
 

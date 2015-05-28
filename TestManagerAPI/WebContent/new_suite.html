@@ -20,24 +20,19 @@
 	content=""
 />
 <!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
-		<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/jquery-ui-1.11.4/external/jquery/jquery.js"></script>
+<script src="js/jquery-ui-1.11.4/jquery-ui.js"></script>
 <script src="js/jquery.dropotron.min.js"></script>
 <script src="js/skel.min.js"></script>
 <script src="js/skel-layers.min.js"></script>
 <script src="js/init.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/start/jquery-ui.css">
+
 <noscript>
-	<link
-		rel="stylesheet"
-		href="css/skel.css"
-	/>
-	<link
-		rel="stylesheet"
-		href="css/style.css"
-	/>
-	<link
-		rel="stylesheet"
-		href="css/style-wide.css"
-	/>
+	<link rel="stylesheet" href="css/skel.css"/>
+	<link rel="stylesheet" href="css/style.css"/>
+	<link rel="stylesheet" href="css/style-wide.css"/>
+  <link rel="stylesheet" href="js/jquery-ui-1.11.4/jquery-ui.css"/>
 </noscript>
 <!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
 <script>
@@ -50,9 +45,13 @@ function getCurrentUser(){
 			username = JSON.parse(result).username;
 			document.getElementById("current_user").innerHTML += username + "&nbsp;&nbsp;";
 			insertProjectName();
-			document.getElementById("selector").addEventListener("change",function(){
-//			document.getElementById("files").innerHTML=
-//			document.getElementById("selector").files[0].name;
+			document.getElementById("new_from_suitexml").addEventListener("change",function(){
+			document.getElementById("files1").innerHTML=
+			document.getElementById("selector1").files[0].name;
+			});
+			document.getElementById("new_from_resultxml").addEventListener("change",function(){
+			document.getElementById("files2").innerHTML=
+			document.getElementById("selector2").files[0].name;
 			});
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
@@ -61,6 +60,91 @@ function getCurrentUser(){
 		}
 	});
 };
+
+jQuery(document).ready(function(){
+	$("#submitBtn1").click(function(){
+	var form = new FormData();
+	var formElement = document.getElementById("selector1");
+	form.append( "uploadedFile", formElement.files[0] );
+	var request = new XMLHttpRequest();
+	request.onload = function() {
+		suite = $.parseJSON(this.responseText);
+		var html = "<b>Suite name: " + suite.suiteName + "</b><br/>";
+		var tests = suite.tests;
+		if(tests.length > 0){
+			html += "<table class=\"projects\" style=\"width:100%;\"><thead><td>Test Name</td><td>Description</td><td>Type</td><td>Automated</td></thead>";
+			for (i = 0; i < tests.length; i++) {
+				html += "<tr><td>";
+				html += tests[i].name;
+				html += "</td><td>";
+				html += tests[i].descr;
+				html += "</td><td>";
+				html += tests[i].type;
+				html += "</td><td>";
+				html += tests[i].automated;
+				html += "</td></tr>";
+			}
+			html += "</table>";
+		}
+		else{
+			html += "ATTENTION: Suite does not contain any tests!";
+		}
+		document.getElementById("dialog").innerHTML=html;
+		$("#dialog").dialog({
+			autoOpen: true,
+			dialogClass: "no-close",
+			width: 800,
+			modal: true,
+			buttons: {
+				"Add Suite": function() {
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+				$( this ).dialog( "close" );
+				}
+			}
+		});
+	}
+	request.open("POST", "/TestManagerAPI/rest/file/upload");
+	request.send(form);
+	});
+	});
+
+jQuery(document).ready(function(){
+	$("#submitBtn3").click(function(){
+		var suite = JSON.stringify({"name": $("#suitename").val(), "projectId": getParameterByName("id")});
+		$.ajax({
+			method: "POST",
+			url: "/TestManagerAPI/rest/suite/addnew",
+			contentType: "application/json;",
+			data:  suite,
+			dataType: "text",
+			success: function(result, textStatus, jqXHR){
+			console.log(result);
+				if(result == "true"){
+					document.getElementById("dialog").innerHTML="Successfully added " + suite.suitename;
+				}
+				else {
+					document.getElementById("dialog").innerHTML="Could not add suite " + suite.suitename + "; Please try again later";
+				};
+				$("#dialog").dialog({
+					autoOpen: true,
+					dialogClass: "no-close",
+					closeOnEscape: true,
+					width: "auto",
+					buttons: {
+						"OK": function() {
+							$( this ).dialog( "close" );
+						},
+					}
+				});
+			},
+			error: function(jqXHR, textStatus, errorThrown){ 
+				alert('Server error: ' + textStatus);
+			}
+		}); 
+	});
+});
 
 function insertProjectName() {
 		var projectJSON = {"name": getParameterByName("name"), "id": getParameterByName("id")};
@@ -112,27 +196,39 @@ function getParameterByName(name) {
 				<p>Choose your way to create a new test suite - you can upload TestNG files and allow the TestManager to extract
 				suite and test case information for you, or you can create an empty suite and add your test cases manually.</p>
 				</br>
-				<input type="file" id="selector"/><div class = "upload">Upload TestNG suite xml</div>
+				<form id="new_from_suitexml" action="#" method="post" enctype="multipart/form-data">
+					<input type="file" autocomplete="off" id="selector1" name="uploadedFile" class="selector"/><div class = "upload" id="files1">Upload TestNG suite xml</div>
+					<div class="12u">
+						<ul class="actions">
+							<li><input type="button" class="button alt" value="Submit" id="submitBtn1"/></li>
+						</ul>
+					</div>
+				</form>
 				<div>OR</div>
-				<input type="file" id="selector"/><div class = "upload">Upload TestNG result xml</div>
+				<form id="new_from_resultxml" action="/TestManagerAPI/rest/file/upload" method="post" enctype="multipart/form-data">
+					<input type="file" autocomplete="off" id="selector2" name="uploadedFile" class="selector"/><div class = "upload" id="files2">Upload TestNG result xml</div>
+					<div class="12u">
+						<ul class="actions">
+							<li><input type="submit" class="button alt" value="Submit" id="submitBtn"/></li>
+						</ul>
+					</div>
+				</form>
 				OR
 				<p><b>Create empty suite:</b></p>
-				<form id="new_suite" action="/TestManagerAPI/rest/file/upload" method="post" enctype="multipart/form-data">
-								<div style="width:30%">
-								<input type="file" name="uploadedFile" id="uploadedFile">
-								<br/>
-									<div class="12u">
-										<input type="text" name="suitename" id="suitename" placeholder="Suite name" />
-									</div>
-									<br/>
-									<div class="12u">
-										<ul class="actions">
-											<li><input type="submit" class="button alt" value="Submit" id="submitBtn"/></li>
-										</ul>
-									</div>
-								</div>
+				<form id="new_suite" action="">
+					<div style="width:30%">
+						<div class="12u">
+							<input type="text" name="suitename" id="suitename" placeholder="Suite name" />
+						</div>
+						<br/>
+						<div class="12u">
+							<ul class="actions">
+								<li><input type="button" class="button alt" value="Submit" id="submitBtn3"/></li>
+							</ul>
+						</div>
+					</div>
 				</form>	
-				
+				<div id="dialog" title="Confirm new test suite" style="overflow-y:auto; overflow-x:hidden; height: 600px;"></div>
 				</div>
 			</div>
 		

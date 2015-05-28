@@ -54,7 +54,6 @@ function getCurrentUser(){
 			insertProjectName();
 			insertNew();
 			insertTests();
-	
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert('Your session has ended!');
@@ -75,10 +74,12 @@ function getCurrentUser(){
 			dataType : "text",
 			success : function(result, textStatus, jqXHR) {
 				tests = $.parseJSON(result);
+				var html = "<table id=\"test_cases\" class = \"projects\">";
+				html += "<thead><td>Test Name</td><td>Description</td><td>Type</td><td>Automated</td><td>Last Run</td><td>Last Result</td><td></td><td></td></thead>";
 				for (i = 0; i < tests.length; i++) {
 					testId = {"id" : tests[i].id};
 					var url = "suite.html?" + $.param(testId);
-					var html = "<tr><td>";
+					html += "<tr><td>";
 					html += tests[i].name;
 					html += "</td><td>";
 					html += tests[i].descr;
@@ -94,11 +95,47 @@ function getCurrentUser(){
 					}
 					else{
 						html += "N/A</td><td>";
-						html += "</td><td>";
+						html += "N/A";
 					}
-					html += "Edit</td><td>Delete</td></tr>";
-					document.getElementById("test_cases").innerHTML += html;
+					html += "</td><td>Edit</td><td>Delete</td></tr>";
 				}
+				html += "</table>"; 
+				document.getElementById("table").innerHTML = html;
+				insertRunsLink(true);
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				alert('update Stock error: ' + textStatus);
+			}
+		});
+	};
+	
+	function insertTestRuns(){
+			$.ajax({
+			url : "/TestManagerAPI/rest/suite/getruns/" + suite_id,
+			dataType : "text",
+			success : function(result, textStatus, jqXHR) {
+				var runs = $.parseJSON(result);
+				var html = "<table id=\"test_cases\" class = \"projects\">";
+				    html += "<thead><td>Test Run</td><td>Test Name</td>";
+					html += "<td>Run Timestamp</td><td>Result</td></thead>";
+				for (i = 0; i < runs.length; i++) {
+					var tests = runs[i].tests;
+					console.log(tests);
+					for(j = 0; j < tests.length; j ++){
+						html += "<tr><td>";
+						html += tests[j].runId;
+						html += "</td><td>";
+						html += tests[j].testName;
+						html += "</td><td>";
+						html += tests[j].timestamp;
+						html += "</td><td>";
+						html += tests[j].result;
+						html += "</td></tr>";
+					}
+					html += "</table>";
+				}
+				document.getElementById("table").innerHTML = html;
+				insertRunsLink(false);
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert('update Stock error: ' + textStatus);
@@ -111,6 +148,17 @@ function getCurrentUser(){
 		var url = "project.html?" + $.param(projectJSON);
 		document.getElementById("project_name").innerHTML += "<a href=\"" + url + "\" >" + projectJSON.name + "</a>";
 	};
+	
+	function insertRunsLink(show){
+		if(show){
+			var html = "<br/><a href=\"javascript:insertTestRuns()\" id=\"runs\" class=\"blueUnderline\">Show test results</a>";
+			document.getElementById("link").innerHTML = html;
+		}
+		else{
+			var html = "<br/><a href=\"javascript:insertTests()\" id=\"runs\" class=\"blueUnderline\">Show test cases</a>";
+			document.getElementById("link").innerHTML = html;
+		}
+	}
 	
 	function getParameterByName(name) {
 	    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
@@ -160,14 +208,10 @@ function getCurrentUser(){
 	<section class="wrapper style1">
 	
 			<div class="row">
-					<div id="content" align="center">
-					
+				<div id="content" align="center">
+				<div id="table"></div>	
 				<!-- Content -->
-				<table id="test_cases" class = "projects">
-				<thead><td>Test Name</td><td>Description</td><td>Type</td><td>Automated</td><td>Last Run</td><td>Last Result</td><td></td><td></td></thead>
-				
-				</table>
-				
+				<div id="link"></div>
 				</div>
 			</div>
 			

@@ -16,6 +16,7 @@ import javax.persistence.PersistenceUnit;
 
 import com.apetkova.tm.base.TestCase;
 import com.apetkova.tm.database.Database;
+import com.apetkova.tm.details.EntityDetails;
 import com.apetkova.tm.details.TestDetails;
 
 public class TestCaseDao {
@@ -77,7 +78,8 @@ public class TestCaseDao {
 			while (rs.next()) {
 				int id = rs.getInt("test_id");
 				TestDetails detail = TestDetails.getObjectByTestId(id, details);
-				detail.lastRun = rs.getTimestamp("timestamp");
+				detail.lastRun = EntityDetails.toStringDate(rs
+						.getTimestamp("timestamp"));
 				detail.lastResult = rs.getString("result");
 				result.add(detail);
 			}

@@ -22,11 +22,9 @@ public final class SqlPreparedQuery {
 			+ "select id from app_schema.user where username = ?)"
 			+ "and role in (?))";
 
-	public static final String SQL_GET_NON_USER_PROJECTS = "select project.id, name, role, timestamp "
-			+ "from app_schema.project left join app_schema.user_project on id = project_id "
-			+ "left join app_schema.user u on user_id = u.id "
-			+ "where "
-			+ "(username = ? and role not in ('admin', 'regular')) or (username <> ? or username is null)";
+	public static final String SQL_GET_NON_USER_PROJECTS = "select project.id, name, role, timestamp, username "
+			+ "from app_schema.project full join app_schema.user_project on id = project_id "
+			+ "left join (select * from app_schema.user where username = ?) u on user_id = u.id";
 
 	public static final String SQL_GET_PROJECT_BY_ID = "select id, name from app_schema.project where id = ?;";
 
@@ -41,8 +39,17 @@ public final class SqlPreparedQuery {
 
 	public static final String SQL_GET_TEST_CASES = "select id, name, descr, type, automated from app_schema.testcase where suite_id = ?";
 
-	public static final String SQL_GET_LAST_SUITE_RUN = "select test_id, timestamp, result from app_schema.test_run"
-			+ " where id in (select id from app_schema.test_run where test_id in (%s) group by id order by timestamp desc limit 1)";
+	public static final String SQL_GET_LAST_SUITE_RUN = "select test_id, timestamp, result from app_schema.test_run "
+			+ "where test_id in (%s) and timestamp in ( "
+			+ "select max(timestamp) from app_schema.test_run group by test_id)";
+
+	public static final String SQL_GET_ALL_SUITE_RESULTS = "select test_run.id, testcase.name, timestamp, result from app_schema.test_run "
+			+ "join app_schema.testcase on test_id = testcase.id where suite_id = ?";
+
+	public static final String SQL_INSERT_SUITE = "INSERT INTO app_schema.suite(name, project_id) VALUES (?, ?)";
+
+	public static final String SQL_GET_PROJECT_USERS = "select username, timestamp from app_schema.user_project join app_schema.user "
+			+ "on user_id = id where role = ? and project_id = ?";
 
 	public static final String SQL_INSERT_TEST = "INSERT INTO app_schema.testcase("
 			+ "name, suite_id, descr, automated, type) "

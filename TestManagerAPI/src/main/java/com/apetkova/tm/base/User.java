@@ -1,32 +1,41 @@
 package com.apetkova.tm.base;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the user database table.
  * 
  */
 @Entity
-@Table(name="user")
-@NamedQuery(name="User.findAll", query="SELECT u FROM User u")
+@Table(name = "user")
+@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(unique=true, nullable=false)
+	@Column(unique = true, nullable = false)
 	private Integer id;
 
-	@Column(nullable=false, length=30)
+	@Column(nullable = false, length = 30)
 	private String email;
 
-	@Column(nullable=false, length=40)
+	@Column(nullable = false, length = 40)
 	private String password;
 
-	@Column(nullable=false, length=20)
+	@Column(nullable = false, length = 20)
 	private String username;
+
+	@Column(name = "first_name", nullable = false, length = 30)
+	private String firstName;
+
+	@Column(name = "last_name", nullable = false, length = 30)
+	private String lastName;
 
 	public User() {
 	}
@@ -61,5 +70,21 @@ public class User implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 }

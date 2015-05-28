@@ -3,16 +3,21 @@ package com.apetkova.tm.dao;
 import static com.apetkova.tm.database.SqlPreparedQuery.SQL_CHECK_EXISTING_EMAIL;
 import static com.apetkova.tm.database.SqlPreparedQuery.SQL_CHECK_EXISTING_USERNAME;
 import static com.apetkova.tm.database.SqlPreparedQuery.SQL_GET_PASS_BY_USRNAME;
+import static com.apetkova.tm.database.SqlPreparedQuery.SQL_GET_PROJECT_USERS;
 import static com.apetkova.tm.database.SqlPreparedQuery.SQL_INSERT_NEW_USER;
 import static com.apetkova.tm.database.SqlPreparedQuery.SQL_SELECT_USER;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.apetkova.tm.base.User;
 import com.apetkova.tm.database.Database;
+import com.apetkova.tm.details.EntityDetails;
 import com.apetkova.tm.details.UserDetails;
+import com.apetkova.tm.details.UserProjectDetails;
 import com.apetkova.tm.utils.PasswordEncryptor;
 
 public class UserDao {
@@ -108,6 +113,8 @@ public class UserDao {
 				user.username = rs.getString("username");
 				user.password = rs.getString("password");
 				user.email = rs.getString("email");
+				user.firstName = rs.getString("first_name");
+				user.lastName = rs.getString("last_name");
 			}
 
 			ps.close();
@@ -123,29 +130,6 @@ public class UserDao {
 		}
 		return user;
 	}
-
-	// public User loadUser(String username){
-	//
-	// User user = new User();
-	// user.setUsername(username);
-	// try {
-	// PreparedStatement ps =
-	// db.getConnection().prepareStatement(SQL_SELECT_USER);
-	// ps.setString(1, username);
-	// ResultSet rset = ps.executeQuery();
-	//
-	// while(rset.next()){
-	// user.setPassword(rset.getString("password"));
-	// user.setEmail(rset.getString("email"));
-	// }
-	//
-	// ps.close();
-	// }catch (SQLException e) {
-	// e.printStackTrace();
-	// return user;
-	// }
-	// return user;
-	// }
 
 	public boolean passwordMatch(String username, String enteredPass) {
 
@@ -164,5 +148,38 @@ public class UserDao {
 			return false;
 		}
 		return PasswordEncryptor.isPasswordCorrect(enteredPass, password);
+	}
+
+	public List<UserProjectDetails> getAwaitingAccess(int projectId, String role) {
+		List<UserProjectDetails> details = new ArrayList<UserProjectDetails>();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			ps = db.getConnection().prepareStatement(SQL_GET_PROJECT_USERS);
+			ps.setString(1, role.toLowerCase());
+			ps.setInt(2, projectId);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				UserProjectDetails detail = new UserProjectDetails();
+				detail.username = rs.getString("username");
+				detail.timestamp = EntityDetails.toStringDate(rs
+						.getTimestamp("timestamp"));
+				detail.role = role;
+				details.add(detail);
+			}
+
+			ps.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+				ps.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return details;
 	}
 }

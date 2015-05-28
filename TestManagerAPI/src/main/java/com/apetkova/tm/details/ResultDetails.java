@@ -12,6 +12,9 @@ public class ResultDetails extends EntityDetails {
 	public String testName;
 	public String timestamp;
 	public String result;
+	public String duration;
+	public String exceptionName;
+	public String stackTrace;
 
 	public static Map<Integer, List<ResultDetails>> getTestRuns(
 			List<ResultDetails> results) {

@@ -9,6 +9,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import com.apetkova.tm.xml.TestNGResult;
+import com.apetkova.tm.xml.TestResult;
 import com.apetkova.tm.xml.TestSuite;
 
 public class FileUtils {
@@ -67,4 +69,20 @@ public class FileUtils {
 		
 		return result;
 	}
+
+	public static TestNGResult getResultsFromFile(String fileName) {
+		TestNGResult result = null;
+		try {
+			File file = new File(fileName);
+			JAXBContext jaxbContext = JAXBContext.newInstance(TestNGResult.class);
+	 
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			result = (TestNGResult) jaxbUnmarshaller.unmarshal(file);
+		} catch (JAXBException jbe) {
+			jbe.printStackTrace();			
+		}
+		
+		return result;
+	}
+
 }
